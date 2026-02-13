@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Important Question 👀</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
+
+<style>
+body {
+  margin:0;
+  font-family:"Nunito",sans-serif;
+  height:100vh;
+  background:linear-gradient(135deg,#ffd6e7,#ffe9f3,#ffd1dc);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  overflow:hidden;
+}
+
+.card {
+  background:white;
+  padding:28px;
+  border-radius:24px;
+  text-align:center;
+  box-shadow:0 20px 50px rgba(0,0,0,.15);
+  max-width:440px;
+  width:92%;
+}
+
+h1 {
+  font-size:26px;
+  margin:10px 0;
+}
+
+img {
+  width:220px;
+  height:220px;
+  object-fit:cover;
+  border-radius:18px;
+}
+
+button {
+  padding:14px 24px;
+  border:none;
+  border-radius:999px;
+  font-size:18px;
+  font-weight:900;
+  cursor:pointer;
+  margin:8px;
+  transition:.15s;
+}
+
+button:hover { transform:scale(1.08); }
+
+#yesBtn { background:#ff4d88; color:white; }
+#noBtn  { background:#e0e0e0; position:fixed; }
+
+#musicBtn {
+  position:fixed;
+  top:10px;
+  right:10px;
+  font-size:14px;
+  padding:8px 12px;
+}
+
+.fade { animation:fade .4s ease; }
+@keyframes fade {
+  from {opacity:0; transform:scale(.9);}
+  to {opacity:1; transform:scale(1);}
+}
+
+.heart {
+  position:fixed;
+  top:-10px;
+  font-size:22px;
+  animation:fall linear forwards;
+}
+
+@keyframes fall {
+  to { transform:translateY(110vh); }
+}
+</style>
+</head>
+
+<body>
+
+<button id="musicBtn">🔈 Music</button>
+
+<div class="card">
+  <img src="caricature.png" id="mainImg">
+  <h1 id="title"></h1>
+  <div id="buttons">
+    <button id="startBtn">Open Important Message 💌</button>
+  </div>
+</div>
+
+<audio id="bgm" loop>
+  <source src="funny.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+const GIRL_NAME = "My Love"; // ← change name
+
+const askGif = "https://media.giphy.com/media/3oriO0OEd9QIDdllqo/giphy.gif";
+const yesGif = "https://media.giphy.com/media/111ebonMs90YLu/giphy.gif";
+
+const title = document.getElementById("title");
+const mainImg = document.getElementById("mainImg");
+const buttonsDiv = document.getElementById("buttons");
+const bgm = document.getElementById("bgm");
+const musicBtn = document.getElementById("musicBtn");
+
+function typeText(text, speed=35){
+  title.textContent="";
+  let i=0;
+  const t=setInterval(()=>{
+    title.textContent+=text[i];
+    i++;
+    if(i>=text.length) clearInterval(t);
+  },speed);
+}
+
+typeText("Warning: Extremely serious question for " + GIRL_NAME + " ⚠️");
+
+document.getElementById("startBtn").onclick = () => {
+  bgm.play().catch(()=>{});
+  mainImg.src = askGif;
+  typeText("Will you be my Valentine? 🥺");
+  showButtons();
+};
+
+function showButtons(){
+  buttonsDiv.innerHTML = `
+    <button id="yesBtn">YES obviously 💖</button>
+    <button id="noBtn">No</button>
+  `;
+  placeNo();
+  hook();
+}
+
+function placeNo(){
+  const b=document.getElementById("noBtn");
+  moveNo(b);
+}
+
+const noTexts = [
+  "No",
+  "Wrong answer",
+  "Illegal move",
+  "Try again 😂",
+  "Button broken",
+  "System says YES",
+  "Nice try",
+  "Access denied",
+  "404 No not found"
+];
+
+let dodge=0;
+
+function moveNo(btn){
+  const pad=10;
+  const x=Math.random()*(window.innerWidth-btn.offsetWidth-pad);
+  const y=Math.random()*(window.innerHeight-btn.offsetHeight-pad);
+  btn.style.left=x+"px";
+  btn.style.top=y+"px";
+}
+
+function hook(){
+  const yes=document.getElementById("yesBtn");
+  const no=document.getElementById("noBtn");
+
+  no.addEventListener("mouseenter",()=>{
+    dodge++;
+    no.textContent=noTexts[dodge%noTexts.length];
+    moveNo(no);
+  });
+
+  no.addEventListener("touchstart",(e)=>{
+    e.preventDefault();
+    dodge++;
+    moveNo(no);
+  });
+
+  yes.onclick=accept;
+}
+
+function accept(){
+  typeText("Correct choice detected 😎💖");
+  mainImg.src=yesGif;
+  mainImg.classList.add("fade");
+  buttonsDiv.style.display="none";
+  heartRain();
+}
+
+function heartRain(){
+  for(let i=0;i<120;i++){
+    const h=document.createElement("div");
+    h.className="heart";
+    h.textContent=["💖","💗","💘","💝"][Math.floor(Math.random()*4)];
+    h.style.left=Math.random()*100+"vw";
+    h.style.animationDuration=(2+Math.random()*3)+"s";
+    document.body.appendChild(h);
+    setTimeout(()=>h.remove(),5000);
+  }
+}
+
+musicBtn.onclick=()=>{
+  if(bgm.paused){
+    bgm.play();
+    musicBtn.textContent="🔊 Music";
+  } else {
+    bgm.pause();
+    musicBtn.textContent="🔈 Music";
+  }
+};
+</script>
+
+</body>
+</html>
