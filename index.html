@@ -215,8 +215,13 @@ musicBtn.onclick=()=>{
     musicBtn.textContent="🔈 Music";
   }
 };
+  window.onload = () => {
+  bgm.play().catch(() => {});
+  musicBtn.textContent = "🔊 Music";
+};
 </script>
 
 </body>
 </html>
+
 
